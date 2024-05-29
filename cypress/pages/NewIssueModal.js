@@ -102,6 +102,24 @@ class NewIssueModal {
       });
   }
 
+  ensureIssueIsCreatedNoAssignee(number, title, iconType) {
+    cy.get(this.issueCreateModal).should("not.exist");
+    cy.reload();
+    cy.contains(this.issueCreatingSuccess).should("not.exist");
+
+    cy.get(this.listBacklog)
+      .should("be.visible")
+      .and("have.length", "1")
+      .within(() => {
+        cy.get(this.listIssues)
+          .should("have.length", number)
+          .first()
+          .find("p")
+          .contains(title);
+        cy.get(iconType).should("be.visible");
+      });
+  }
+
   ensureIssueIsVisibleOnBoard(issueTitle) {
     cy.get(this.issueDetailModal).should("not.exist");
     cy.reload();
