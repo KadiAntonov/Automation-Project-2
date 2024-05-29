@@ -1,4 +1,4 @@
-import NewIssueModal from "../../pages/NewIssueModal";
+import NewIssueModal from "../pages/NewIssueModal";
 
 describe("Deleting an issue (cancel and confirm)", () => {
   beforeEach(() => {
