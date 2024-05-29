@@ -3,6 +3,7 @@ class NewIssueModal {
   constructor() {
     this.issueCreateModal = '[data-testid="modal:issue-create"]';
     this.issueDetailModal = '[data-testid="modal:issue-details"]';
+    this.confirmationModal = '[data-testid="modal:confirm"]';
     this.descriptionField = ".ql-editor";
     this.titleField = 'input[name="title"]';
     this.issueType = '[data-testid="select:type"]';
@@ -18,6 +19,10 @@ class NewIssueModal {
     this.optionPickleRick = '[data-testid="select-option:Pickle Rick"]';
     this.optionLordGaben = '[data-testid="select-option:Lord Gaben"]';
     this.buttonCreateIssue = 'button[type="submit"]';
+    this.buttonCloseDetails = '[data-testid="icon:close"]';
+    this.buttonDeleteIssue = '[data-testid="icon:trash"]';
+    this.confirmDeleteButtonName = "Delete issue";
+    this.cancelDeleteButtonName = "Cancel";
     this.issueCreatingSuccess = "Issue has been successfully created.";
     this.listBacklog = '[data-testid="board-list:backlog"]';
     this.listIssues = '[data-testid="list-issue"]';
@@ -34,6 +39,7 @@ class NewIssueModal {
     this.issueTitle1 = "TEST_TITLE";
     this.issueTitle2 = "Bug";
     this.issueTitleR = faker.lorem.word();
+    this.deleteIssueTitle = "This is an issue of type: Task.";
     this.value5 = "5";
   }
 
@@ -121,9 +127,76 @@ class NewIssueModal {
   }
 
   ensureIssueIsVisibleOnBoard(issueTitle) {
-    cy.get(this.issueDetailModal).should("not.exist");
+    cy.get(this.issueCreateModal).should("not.exist");
     cy.reload();
     cy.contains(issueTitle).should("be.visible");
+  }
+
+  clickDeleteButton() {
+    cy.get(this.buttonDeleteIssue).click();
+    cy.get(this.confirmationModal).should("be.visible");
+  }
+
+  confirmDeletion() {
+    cy.get(this.confirmationModal).within(() => {
+      cy.contains(this.confirmDeleteButtonName).click();
+    });
+    cy.get(this.confirmationModal).should("not.exist");
+    cy.get(this.listBacklog).should("be.visible");
+  }
+
+  cancelDeletion() {
+    cy.get(this.confirmationModal).within(() => {
+      cy.contains(this.cancelDeleteButtonName).click();
+    });
+    cy.get(this.confirmationModal).should("not.exist");
+  }
+
+  closeDetailModal() {
+    cy.get(this.issueDetailModal)
+      .should("be.visible")
+      .within(() => {
+        cy.get(this.buttonCloseDetails).first().click();
+      });
+    cy.get(this.issueDetailModal).should("not.exist");
+  }
+
+  ensureIssueIsDeleted(number, title) {
+    cy.get(this.issueDetailModal).should("not.exist");
+    cy.reload();
+
+    cy.get(this.listBacklog)
+      .should("be.visible")
+      .and("have.length", "1")
+      .within(() => {
+        cy.get(this.listIssues)
+          .should("have.length", number)
+          .first()
+          .find("p")
+          .should("not.have.text", title);
+      });
+  }
+
+  ensureIssueIsNotDeleted(number, title) {
+    cy.get(this.issueDetailModal).should("not.exist");
+    cy.reload();
+
+    cy.get(this.listBacklog)
+      .should("be.visible")
+      .and("have.length", "1")
+      .within(() => {
+        cy.get(this.listIssues)
+          .should("have.length", number)
+          .first()
+          .find("p")
+          .contains(title);
+      });
+  }
+
+  ensureIssueIsNotVisibleOnBoard(title) {
+    cy.get(this.issueDetailModal).should("not.exist");
+    cy.reload();
+    cy.contains(title).should("not.exist");
   }
 }
 
