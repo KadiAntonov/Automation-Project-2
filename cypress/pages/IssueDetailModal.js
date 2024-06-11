@@ -15,6 +15,8 @@ class IssueDetailModal {
     this.commentTextArea = 'textarea[placeholder="Add a comment..."]';
     this.clickSaveButton = () =>
       cy.contains("button", "Save").click().should("not.exist");
+    this.clickCancelButton = () =>
+      cy.contains("button", "Cancel").click().should("not.exist");
     this.clickDeleteButton = () =>
       cy.contains("button", "Delete comment").click().should("not.exist");
     this.clickDoneButton = () =>
