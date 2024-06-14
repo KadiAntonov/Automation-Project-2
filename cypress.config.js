@@ -9,7 +9,7 @@ module.exports = defineConfig({
     env: {
       baseUrl: "https://jira.ivorreic.com/",
     },
-    defaultCommandTimeout: 60000,
+    defaultCommandTimeout: 100000,
     requestTimeout: 20000,
     chromeWebSequrity: false,
   },

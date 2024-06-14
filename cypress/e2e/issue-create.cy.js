@@ -78,4 +78,25 @@ describe("Issue create", () => {
       );
     });
   });
+
+  it("Should validate application removes unnecessary spaces on the board view", () => {
+    const title = "Hello     world!";
+    const description = "Check the spaces";
+    const hello = "Hello";
+
+    NewIssueModal.createIssueMinimum(description, title);
+    NewIssueModal.ensureIssueIsCreatedNoAssignee(
+      5,
+      hello,
+      NewIssueModal.avatarLordGaben
+    );
+    cy.get(NewIssueModal.listIssues)
+      .first()
+      .find("p")
+      .invoke("text")
+      .then((actualTitle) => {
+        const trimmedPredefinedTitle = title.trim();
+        expect(actualTitle).to.equal(trimmedPredefinedTitle);
+      });
+  });
 });

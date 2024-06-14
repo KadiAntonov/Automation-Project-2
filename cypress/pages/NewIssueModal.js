@@ -89,6 +89,14 @@ class NewIssueModal {
     });
   }
 
+  createIssueMinimum(description, title) {
+    this.getIssueCreateModal().within(() => {
+      this.editDescription(description);
+      this.editTitle(title);
+      cy.get(this.buttonCreateIssue).click();
+    });
+  }
+
   ensureIssueIsCreated(number, title, avatarAssignee, iconType) {
     cy.get(this.issueCreateModal).should("not.exist");
     cy.reload();
